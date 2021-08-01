@@ -118,6 +118,8 @@ def run(grid):
 
 #run the program
 run(grid1)
+run(grid2)
+run(grid3)
 
 """
 #alernative, printing all solutions or nothing if sudoku is unsolvable
