@@ -136,7 +136,7 @@ def solve2(grid):
     print("Solution:")
     print_grid(grid)
    
-#run the program for a solvable sudoku 
+#run the program
 def run2(grid):
     print("Input:")
     print_grid(grid)
