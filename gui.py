@@ -2,7 +2,14 @@ import pygame
 
 WIDTH = 550
 HEIGHT = 550
-background_color = (251, 247, 245)
+
+white = [255, 255, 255]
+background_color = white
+
+def draw_grid_lines(win):
+    for i in range(10):
+        pygame.draw.line(win, (0, 0, 0), (50 + 50 * i, 50), (50 + 50 * i, 500), 2)
+        pygame.draw.line(win, (0, 0, 0), (50, 50 + 50 * i), (500, 50 + 50 * i), 2)
 
 def main():
     pygame.init()
@@ -10,9 +17,7 @@ def main():
     pygame.display.set_caption("Sudoku")
     win.fill(background_color)
     
-    for i in range(10):
-        pygame.draw.line(win, (0, 0, 0), (50 + 50 * i, 50), (50 + 50 * i, 500), 2)
-        pygame.draw.line(win, (0, 0, 0), (50, 50 + 50 * i), (500, 50 + 50 * i), 2)
+    draw_grid_lines(win)
     pygame.display.update()
     
     while True:
