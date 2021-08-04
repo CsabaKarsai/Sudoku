@@ -7,7 +7,7 @@ HEIGHT = 550
 white = [255, 255, 255]
 black = [0, 0, 0]
 background_color = white
-#easy, medium, hard
+# easy, medium, hard
 game_difficulty = "easy"
 
 def draw_grid_lines(win):
