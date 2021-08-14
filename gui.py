@@ -28,6 +28,25 @@ def draw_grid_values(win ,grid, font):
             if (0 < grid[i][j] < 10):
                 value = font.render(str(grid[i][j]), True, black)
                 win.blit(value, ((j + 1) * 50 + 20, (i + 1) * 50 + 14))
+                
+def redraw_window(win, board, time, strikes):
+    win.fill(black)
+    # Draw time
+    fnt = pygame.font.SysFont("comicsans", 35)
+    text = fnt.render("Time: " + format_time(time), True, white)
+    win.blit(text, (WIDTH - 200, HEIGHT - 20))
+    # Draw text if input failed?
+    # Draw grid and board
+    board.draw(win)
+
+
+def format_time(time_in_secs):
+    seconds = time_in_secs%60
+    minutes = time_in_secs//60
+    hours = minutes//60
+
+    time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
+    return time
 
 def main():
     pygame.init()
@@ -52,7 +71,7 @@ def main():
 main()
 
 # One cell of the 9x9 sudoku board where a number should be put
-class cell:
+class Cell:
     def __init__(self, value, row, col):
         self.value = value
         self.temp = 0
@@ -83,5 +102,4 @@ class cell:
 
     def set_temp(self, val):
         self.temp = val
-
         
