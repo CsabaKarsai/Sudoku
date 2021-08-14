@@ -50,3 +50,38 @@ def main():
                 return
 
 main()
+
+# One cell of the 9x9 sudoku board where a number should be put
+class cell:
+    def __init__(self, value, row, col):
+        self.value = value
+        self.temp = 0
+        self.row = row
+        self.col = col
+        self.width = 50
+        self.height = 50
+        self.selected = False
+    
+    
+    def grid_to_pygame_coords():
+        return (50 + self.col * 50, 50 + self.row * 50)
+    
+    def draw(self, win):
+        fnt = pygame.font.SysFont("comicsans", 35)
+        x, y = grid_to_pygame_coords()
+        if self.temp != 0 and self.value == 0:
+            temp = fnt.render(str(self.temp), True, (128,128,128))
+            win.blit(temp, (x+5, y+5))
+        elif not(self.value == 0):
+            temp = fnt.render(str(self.value), True, (0, 0, 0))
+            win.blit(temp, (x + (gap/2 - temp.get_width()/2), y + (gap/2 - temp.get_height()/2)))
+        if self.selected:
+            pygame.draw.rect(win, (255,0,0), (x,y, gap ,gap), 3)
+    
+    def set_value(self, val):
+        self.value = val
+
+    def set_temp(self, val):
+        self.temp = val
+
+        
