@@ -46,16 +46,20 @@ class Grid:
     def update_modified(self):
         self.modified = [[self.cells[i][j].value for j in range(9)] for i in range(9)]
        
-    # Checks if utting a vlue in the selected cell is possible
+    # Checks if putting a value in the selected cell is possible
     def put(self, val):
         row, col = self.selected
         if self.cells[row][col].value == 0:
-            self.cells[row][col].set_value(val)
             self.update_modified()
-            print(self.modified)
-
-            if check(self.modified, row, col, val) and solve(self.modified):
-                return True
+            # Check if rows, columns and 3x3 blocks allow for a placement of this value in the cell
+            if check(self.modified, row, col, val):
+                # Place the value in the Cell
+                self.cells[row][col].set_value(val)
+                self.update_modified()
+                # Check if solution for modified grid exists
+                if solve(self.modified):
+                    return True
+            # Reset the cell
             else:
                 self.cells[row][col].set_value(0)
                 self.cells[row][col].set_temp(0)
@@ -71,7 +75,6 @@ class Grid:
     def draw(self, win):
         # Draw grid lines
         draw_grid_lines(win)
-
         # Draw cells
         draw_cells(win, self.cells)
 
@@ -109,7 +112,7 @@ class Grid:
         return True
     
 WIDTH = 550
-HEIGHT = 550
+HEIGHT = 600
 
 white = [255, 255, 255]
 black = [0, 0, 0]
@@ -143,13 +146,16 @@ def draw_grid_values(win ,grid, font):
                 value = font.render(str(grid[i][j]), True, black)
                 win.blit(value, ((j + 1) * 50 + 20, (i + 1) * 50 + 14))
                 
-def redraw_window(win, grid, time):
+def redraw_window(win, grid, time, text):
     win.fill(white)
     # Draw time
-    fnt = pygame.font.SysFont("comicsans", 35)
-    text = fnt.render("Time: " + format_time(time), True, white)
-    win.blit(text, (WIDTH - 200, HEIGHT - 20))
-    # Draw text if input failed?
+    fnt = pygame.font.SysFont("comicsans", 30)
+    time_to_show = fnt.render("Time: " + format_time(time), True, black)
+    win.blit(time_to_show, (WIDTH - 500, HEIGHT - 80))
+    # Draw text if user presses return key
+    fnt = pygame.font.SysFont("comicsans", 30)
+    text_to_show = fnt.render(text, True, black)
+    win.blit(text_to_show, (WIDTH - 500, HEIGHT - 45))
     # Draw grid
     grid.draw(win)
 
@@ -182,6 +188,7 @@ def main():
     ])
     key = None
     run = True
+    text = ""
     start = time.time()
     
     while run:
@@ -208,27 +215,25 @@ def main():
                     key = 8
                 if event.key == pygame.K_9:
                     key = 9
-                if event.key == pygame.K_DELETE:
-                    board.clear()
+                if event.key == pygame.K_BACKSPACE:
+                    grid.clear()
                     key = None
                 if event.key == pygame.K_RETURN:
                     i, j = grid.selected
                     if grid.cells[i][j].temp != 0:
                         if grid.put(grid.cells[i][j].temp):
-                            print("Success")
+                            text = "Your guess for cell (%d,%d) was correct!" % (i, j)
                         else:
-                            print("Wrong")
+                            text = "Your guess for cell (%d,%d) was wrong." % (i, j)
                         key = None
 
                         if grid.is_finished():
-                            print("Congratulations! You finished this Sudoku puzzle!")
+                            text= "Congratulations! You finished this Sudoku!"
                             run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 clicked = grid.click(pos)
-                print(clicked[0])
-                print(clicked[1])
                 if clicked:
                     grid.select(clicked[0], clicked[1])
                     key = None
@@ -236,7 +241,7 @@ def main():
         if grid.selected and key != None:
             grid.note(key)
 
-        redraw_window(win, grid, play_time)
+        redraw_window(win, grid, play_time, text)
         pygame.display.update()
 
 main()

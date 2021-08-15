@@ -37,6 +37,19 @@ grid3 = [
     [0,0,7,0,8,0,0,7,9]
 ]
 
+# grid4 has one solution
+grid4 = [
+    [5,3,4,0,7,0,0,0,0],
+    [6,0,0,1,9,5,0,0,0],
+    [0,9,8,0,0,0,0,6,0],
+    [8,0,0,0,6,0,0,0,3],
+    [4,0,0,8,0,3,0,0,1],
+    [7,0,0,0,2,0,0,0,6],
+    [0,6,0,0,0,0,2,8,0],
+    [0,0,0,4,1,9,0,0,5],
+    [0,0,0,0,8,0,0,7,9]
+]
+
 # prints the sudoku board in a readable format
 def print_grid(grid):
     for x in range(0,9):
@@ -52,11 +65,11 @@ def print_grid(grid):
 
 # checks whether the candidate number could be put at position (x,y)
 def check(grid, x, y, candidate):
-    if check_row(grid, x, candidate) == False:
+    if check_row(grid, x, candidate) == True:
         return False
-    elif check_column(grid, y, candidate) == False:
+    elif check_column(grid, y, candidate) == True:
         return False
-    elif check_block(grid, x, y, candidate) == False:
+    elif check_block(grid, x, y, candidate) == True:
         return False
     return True
 
@@ -64,13 +77,13 @@ def check(grid, x, y, candidate):
 def check_row(grid, x, candidate):
     for i in range(9):
         if grid[x][i] == candidate:
-            return False
+            return True
 
 # check if the column y has a number equal to candidate
 def check_column(grid, y, candidate):
     for i in range(9):
         if grid[i][y] == candidate:
-            return False
+            return True
         
 # computes the coordinates of the upper left corner of the 3x3 block cell (x, y) is in
 def compute_upper_corner_coordinates(x, y):
@@ -86,7 +99,7 @@ def check_block(grid, x, y, candidate):
     for i in range(3):
         for j in range(3):
             if grid[block_x+i][block_y+j] == candidate:
-                return False
+                return True
     
 # find an empty cell
 def find_empty(grid):
@@ -121,11 +134,11 @@ def run(grid):
     else:
         print("This Sudoku is unsolvable!")
 
-# run the program
+"""
 run(grid1)
 run(grid2)
 run(grid3)
-
+"""
 """
 #alernative, printing all solutions or nothing if sudoku is unsolvable
 def solve2(grid):    
