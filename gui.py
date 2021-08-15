@@ -3,7 +3,7 @@ import requests
 import time
 from code import solve, check
 
-# One cell of the 9x9 sudoku board where a number should be put
+# One cell of the 9x9 sudoku board
 class Cell:
     def __init__(self, value, row, col):
         self.value = value
@@ -16,10 +16,11 @@ class Cell:
     
     def draw(self, win):
         fnt = pygame.font.SysFont("comicsans", 35)
+        fnt_small = pygame.font.SysFont("comicsans", 30)
         x, y = (50 + self.col * 50, 50 + self.row * 50)
         # Draw a temporal value in upper left corner of a cell
         if self.temp != 0 and self.value == 0:
-            temp = fnt.render(str(self.temp), True, (128,128,128))
+            temp = fnt_small.render(str(self.temp), True, (128,128,128))
             win.blit(temp, (x+5, y+5))
         # Draw value of a cell
         elif not(self.value == 0):
@@ -226,12 +227,12 @@ def main():
                         if grid.put(grid.cells[i][j].temp):
                             text = "Your guess for cell (%d,%d) was correct!" % (i, j)
                         else:
-                            text = "Your guess for cell (%d,%d) was wrong." % (i, j)
+                            if grid.cells[i][j].value == 0:
+                                text = "Your guess for cell (%d,%d) was wrong." % (i, j)
                         key = None
 
                         if grid.is_finished():
                             text = "Congratulations! You finished this Sudoku!"
-                            run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
