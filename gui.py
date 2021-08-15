@@ -52,8 +52,9 @@ class Grid:
         if self.cells[row][col].value == 0:
             self.cells[row][col].set_value(val)
             self.update_modified()
+            print(self.modified)
 
-            if check(self.modified, x, y, candidate) and solve(self.model):
+            if check(self.modified, row, col, val) and solve(self.modified):
                 return True
             else:
                 self.cells[row][col].set_value(0)
@@ -92,17 +93,17 @@ class Grid:
 
     # Converts the mouse coordinates to grid coordinates
     def click(self, pos):
-        if (50 <= pos[0] <= 450) and 50 <= pos[1] < 450:
-            x = pos[0] // 50
-            y = pos[1] // 50
+        if (51 < pos[0] < 500) and (50 < pos[1] < 500):
+            x = (pos[0]//50) - 1
+            y = (pos[1]//50) - 1
             return (int(y),int(x))
         else:
             return None
 
     # Checks if the Sudoku is completed
     def is_finished(self):
-        for i in range(self.rows):
-            for j in range(self.cols):
+        for i in range(9):
+            for j in range(9):
                 if self.cells[i][j].value == 0:
                     return False
         return True
@@ -167,7 +168,18 @@ def main():
     
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")    
-    grid = Grid(get_grid_from_API(game_difficulty))
+    #grid = Grid(get_grid_from_API(game_difficulty))
+    grid = Grid([
+        [5,3,0,0,7,0,0,0,0],
+        [6,0,0,1,9,5,0,0,0],
+        [0,9,8,0,0,0,0,6,0],
+        [8,0,0,0,6,0,0,0,3],
+        [4,0,0,8,0,3,0,0,1],
+        [7,0,0,0,2,0,0,0,6],
+        [0,6,0,0,0,0,2,8,0],
+        [0,0,0,4,1,9,0,0,5],
+        [0,0,0,0,8,0,0,7,9]
+    ])
     key = None
     run = True
     start = time.time()
