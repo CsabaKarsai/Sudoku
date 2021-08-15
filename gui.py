@@ -1,7 +1,7 @@
 import pygame
 import requests
 import time
-from code import solve, check
+from solver import solve, check
 
 # One cell of the 9x9 sudoku board
 class Cell:
@@ -29,9 +29,11 @@ class Cell:
         if self.selected:
             pygame.draw.rect(win, red, (x,y, 50 ,50), 3)
     
+    # Sets the value of a cell
     def set_value(self, val):
         self.value = val
 
+    # Sets the temporal value of a cell
     def set_temp(self, val):
         self.temp = val
         
@@ -125,6 +127,7 @@ background_color = white
 # easy, medium, hard
 game_difficulty = "easy"
 
+# Draws the horizontal and vertical lines of the sudoku board
 def draw_grid_lines(win):
     for i in range(10):
         thickness = 1
@@ -132,23 +135,19 @@ def draw_grid_lines(win):
             thickness = 3
         pygame.draw.line(win, black, (50 + 50 * i, 50), (50 + 50 * i, 500), thickness)
         pygame.draw.line(win, black, (50, 50 + 50 * i), (500, 50 + 50 * i), thickness)
-        
+ 
+# Draws the values for each cell        
 def draw_cells(win, cells):
     for i in range(9):
             for j in range(9):
                 cells[i][j].draw(win)
 
+# Queries a website for a sudoku board based on dificulty
 def get_grid_from_API(difficulty):
     response = requests.get("https://sugoku.herokuapp.com/board?difficulty=" + difficulty)
     return response.json()["board"]
-
-def draw_grid_values(win ,grid, font):
-    for i in range(9):
-        for j in range(9):
-            if (0 < grid[i][j] < 10):
-                value = font.render(str(grid[i][j]), True, black)
-                win.blit(value, ((j + 1) * 50 + 20, (i + 1) * 50 + 14))
-                
+    
+# Updates the content of the window to be displayed             
 def redraw_window(win, grid, time, text):
     win.fill(white)
     # Draw time
@@ -162,7 +161,7 @@ def redraw_window(win, grid, time, text):
     # Draw grid
     grid.draw(win)
 
-
+# Returns the time in hours:minutes:seconds format
 def format_time(time_in_secs):
     seconds = time_in_secs%60
     minutes = time_in_secs//60
@@ -170,6 +169,7 @@ def format_time(time_in_secs):
     time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
     return time
 
+# Runs the game
 def main():
     pygame.init()
     pygame.font.init()
@@ -177,18 +177,7 @@ def main():
     
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")    
-    #grid = Grid(get_grid_from_API(game_difficulty))
-    grid = Grid([
-        [5,3,0,0,7,0,0,0,0],
-        [6,0,0,1,9,5,0,0,0],
-        [0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],
-        [4,0,0,8,0,3,0,0,1],
-        [7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],
-        [0,0,0,4,1,9,0,0,5],
-        [0,0,0,0,8,0,0,7,9]
-    ])
+    grid = Grid(get_grid_from_API(game_difficulty))
     key = None
     run = True
     text = ""
@@ -248,4 +237,3 @@ def main():
         pygame.display.update()
 
 main()
-pygame.quit()
