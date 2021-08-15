@@ -49,16 +49,18 @@ class Grid:
     # Checks if putting a value in the selected cell is possible
     def put(self, val):
         row, col = self.selected
+        # Check for valid value already present in cell
         if self.cells[row][col].value == 0:
             self.update_modified()
             # Check if rows, columns and 3x3 blocks allow for a placement of this value in the cell
-            if check(self.modified, row, col, val):
-                # Place the value in the Cell
-                self.cells[row][col].set_value(val)
-                self.update_modified()
-                # Check if solution for modified grid exists
-                if solve(self.modified):
-                    return True
+            check_grid = check(self.modified, row, col, val)
+            # Place the value in the Cell
+            self.cells[row][col].set_value(val)
+            self.update_modified()
+            # Check if solution for modified grid exists
+            solvable = solve(self.modified)
+            if check_grid and solvable:
+                return True
             # Reset the cell
             else:
                 self.cells[row][col].set_value(0)
@@ -228,7 +230,7 @@ def main():
                         key = None
 
                         if grid.is_finished():
-                            text= "Congratulations! You finished this Sudoku!"
+                            text = "Congratulations! You finished this Sudoku!"
                             run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
