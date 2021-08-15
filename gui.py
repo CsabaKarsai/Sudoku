@@ -236,4 +236,5 @@ def main():
         redraw_window(win, grid, play_time, text)
         pygame.display.update()
 
-main()
+if __name__ == '__main__':
+    main()
