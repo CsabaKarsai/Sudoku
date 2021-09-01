@@ -36,4 +36,4 @@ However, if you have suggestions for improvements or feel that something is miss
 
 ## License
 
-This project uses
+This project is licensed under the GNU General Public License v3.0.
