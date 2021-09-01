@@ -36,9 +36,4 @@ However, if you have suggestions for improvements or feel that something is miss
 
 ## License
 
-## (TO DELETE)
-
-[<img align="left" alt="Linux" height="30" src="https://img.shields.io/badge/-Linux-555?&logo=Linux&logoColor=white" />][linux]
-[repos]: https://github.com/CsabaKarsai?tab=repositories
-
-![image](https://user-images.githubusercontent.com/64684648/131707481-1b6facd0-f0c5-409e-9f72-4dc3e85fc477.png)
+This project uses
