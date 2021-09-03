@@ -16,7 +16,7 @@ It aims to show basic knowledge about Python and GUI design.
 Thanks to it’s simplicity of use and because performance is not imperative for this project,
 Pygame was selected to provide the user interface.
 
-![video](https://user-images.githubusercontent.com/64684648/132067181-85a75c8d-f793-491b-b4e1-47537ee94652.mp4)
+![mp4](https://user-images.githubusercontent.com/64684648/132067181-85a75c8d-f793-491b-b4e1-47537ee94652.mp4)
 
 https://user-images.githubusercontent.com/64684648/132067181-85a75c8d-f793-491b-b4e1-47537ee94652.mp4
 ## Requirements
