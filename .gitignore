@@ -5,5 +5,8 @@
 !.vscode/extensions.json
 *.code-workspace
 
+# Python Cache
+__pycache__/*
+
 # Local History for Visual Studio Code
 .history/
