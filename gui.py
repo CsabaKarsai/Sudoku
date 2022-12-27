@@ -129,7 +129,7 @@ background_color = white
 # percentage of empty cells to be used for board generation
 # 0.4 means 40% of cells will be empty
 # the higher the value the more difficult the game
-portion_empty_cells = 0.5
+portion_empty_cells = 0.7
 
 # Draws the horizontal and vertical lines of the sudoku board
 def draw_grid_lines(win):
