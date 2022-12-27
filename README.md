@@ -14,15 +14,14 @@ Sudoku is a logic-based, combinatorial number-placement puzzle.
 This small project implements a playable version of the game and comes with a simple GUI.
 It aims to show basic knowledge about Python and GUI design.
 Thanks to it’s simplicity of use and because performance is not imperative for this project,
-Pygame was selected to provide the user interface. On startup the game queries a website for the initial Sudoku board.
+Pygame was selected to provide the user interface. On startup the game uses the py-sudoku library to create an initial Sudoku board. This may be replaced later with a self-made sudoku generator.
 
 https://user-images.githubusercontent.com/64684648/132067181-85a75c8d-f793-491b-b4e1-47537ee94652.mp4
 ## Requirements
 
 - Python version 3.9.6 or later installed
 - Pygame version 2.0.1 or later installed
-- Requests version 2.26.0 or later installed
-- Internet connection
+- py-sudoku version 1.0.3 or later installed
 
 ## Usage
 
@@ -35,7 +34,6 @@ https://user-images.githubusercontent.com/64684648/132067181-85a75c8d-f793-491b-
 ## Technologies
 
 - Pygame
-- Requests
 ## Project Status
 
 This project is complete and will not be developed any further.

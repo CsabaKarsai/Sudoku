@@ -1,7 +1,9 @@
 import pygame
-import requests
 import time
 from solver import solve, check
+
+# Used to generate board, possibly replaced with own sudoku generator later
+from sudoku import Sudoku
 
 # One cell of the 9x9 sudoku board
 class Cell:
@@ -124,8 +126,10 @@ black = [0, 0, 0]
 red = [255, 0, 0]
 
 background_color = white
-# easy, medium, hard
-game_difficulty = "easy"
+# percentage of empty cells to be used for board generation
+# 0.4 means 40% of cells will be empty
+# the higher the value the more difficult the game
+portion_empty_cells = 0.5
 
 # Draws the horizontal and vertical lines of the sudoku board
 def draw_grid_lines(win):
@@ -142,10 +146,30 @@ def draw_cells(win, cells):
             for j in range(9):
                 cells[i][j].draw(win)
 
-# Queries a website for a sudoku board based on dificulty
-def get_grid_from_API(difficulty):
-    response = requests.get("https://sugoku.herokuapp.com/board?difficulty=" + difficulty)
-    return response.json()["board"]
+# Uses the py-sudoku library to create a sudoku
+def get_grid_from_py_sudoku(portion_empty_cells):
+    
+    # Create a 3 x 3 sudoku board as a list of lists
+    # portion of empty cells decides how many cells will be empty 
+    # example return value:
+    # [
+        # [0, 0, 0, 0, 2, 0, 1, 9, 0],
+        # [9, 0, 2, 0, 1, 0, 6, 8, 7],
+        # [0, 3, 8, 0, 0, 9, 4, 0, 5],
+        # [4, 0, 0, 0, 9, 0, 7, 3, 6],
+        # [6, 2, 0, 1, 0, 4, 0, 5, 0],
+        # [0, 9, 0, 0, 6, 0, 2, 1, 4],
+        # [0, 8, 0, 9, 4, 6, 5, 0, 2],
+        # [2, 5, 4, 7, 8, 1, 3, 6, 9],
+        # [7, 0, 9, 0, 0, 3, 8, 4, 0]
+    # ]
+    grid = Sudoku(3, 3).difficulty(portion_empty_cells).board
+    # Replace None values with zeros
+    for i in range(9):
+        for j in range(9):
+            if grid[i][j] == None:
+                grid[i][j] = 0
+    return grid
     
 # Updates the content of the window to be displayed             
 def redraw_window(win, grid, time, text):
@@ -177,7 +201,7 @@ def main():
     
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")    
-    grid = Grid(get_grid_from_API(game_difficulty))
+    grid = Grid(get_grid_from_py_sudoku(portion_empty_cells))
     key = None
     run = True
     text = ""
