@@ -11,6 +11,8 @@ BACKGROUND_COLOR = WHITE
 NUMBER_OF_CLUES = 30
 
 # One cell of the sudoku board
+
+
 class Cell:
     def __init__(self, value, row, col):
         self.value = value
@@ -20,22 +22,23 @@ class Cell:
         self.width = 50
         self.height = 50
         self.selected = False
-    
+
     def draw(self, win):
         fnt = pygame.font.SysFont("comicsans", 35)
         fnt_small = pygame.font.SysFont("comicsans", 30)
         x, y = (50 + self.col * 50, 50 + self.row * 50)
         # Draw a temporal value in upper left corner of a cell
         if self.temp != 0 and self.value == 0:
-            temp = fnt_small.render(str(self.temp), True, (128,128,128))
-            win.blit(temp, (x+5, y+5))
+            temp = fnt_small.render(str(self.temp), True, (128, 128, 128))
+            win.blit(temp, (x + 5, y + 5))
         # Draw value of a cell
-        elif not(self.value == 0):
+        elif not (self.value == 0):
             temp = fnt.render(str(self.value), True, (0, 0, 0))
-            win.blit(temp, (x + (25 - temp.get_width()/2), y + (25 - temp.get_height()/2)))
+            win.blit(temp, (x + (25 - temp.get_width() / 2),
+                     y + (25 - temp.get_height() / 2)))
         if self.selected:
-            pygame.draw.rect(win, RED, (x,y, 50 ,50), 3)
-    
+            pygame.draw.rect(win, RED, (x, y, 50, 50), 3)
+
     # Sets the value of a cell
     def set_value(self, val):
         self.value = val
@@ -43,26 +46,31 @@ class Cell:
     # Sets the temporal value of a cell
     def set_temp(self, val):
         self.temp = val
-        
+
 # Grid consisting of 9x9 cells
+
+
 class Grid:
     def __init__(self, grid):
         self.grid = grid
-        self.cells = [[Cell(self.grid[i][j], i, j) for j in range(9)] for i in range(9)]
+        self.cells = [[Cell(self.grid[i][j], i, j)
+                       for j in range(9)] for i in range(9)]
         self.modified = None
         self.selected = None
-     
-    # Updates the model which will be sent to solver to solve    
+
+    # Updates the model which will be sent to solver to solve
     def update_modified(self):
-        self.modified = [[self.cells[i][j].value for j in range(9)] for i in range(9)]
-       
+        self.modified = [
+            [self.cells[i][j].value for j in range(9)] for i in range(9)]
+
     # Checks if putting a value in the selected cell is possible
     def put(self, val):
         row, col = self.selected
         # Check for valid value already present in cell
         if self.cells[row][col].value == 0:
             self.update_modified()
-            # Check if rows, columns and 3x3 blocks allow for a placement of this value in the cell
+            # Check if rows, columns and 3x3 blocks allow for a placement of
+            # this value in the cell
             check_grid = check(self.modified, row, col, val)
             # Place the value in the Cell
             self.cells[row][col].set_value(val)
@@ -77,7 +85,7 @@ class Grid:
                 self.cells[row][col].set_temp(0)
                 self.update_modified()
                 return False
-            
+
     # Notes a number in the upper left corner of a cell
     def note(self, val):
         row, col = self.selected
@@ -109,9 +117,9 @@ class Grid:
     # Converts the mouse coordinates to grid coordinates
     def click(self, pos):
         if (51 < pos[0] < 500) and (50 < pos[1] < 500):
-            x = (pos[0]//50) - 1
-            y = (pos[1]//50) - 1
-            return (int(y),int(x))
+            x = (pos[0] // 50) - 1
+            y = (pos[1] // 50) - 1
+            return (int(y), int(x))
         else:
             return None
 
@@ -124,21 +132,29 @@ class Grid:
         return True
 
 # Draws the horizontal and vertical lines of the sudoku board
+
+
 def draw_grid_lines(win):
     for i in range(10):
         thickness = 1
-        if(i % 3 == 0):
+        if (i % 3 == 0):
             thickness = 3
-        pygame.draw.line(win, BLACK, (50 + 50 * i, 50), (50 + 50 * i, 500), thickness)
-        pygame.draw.line(win, BLACK, (50, 50 + 50 * i), (500, 50 + 50 * i), thickness)
- 
-# Draws the values for each cell        
+        pygame.draw.line(win, BLACK, (50 + 50 * i, 50),
+                         (50 + 50 * i, 500), thickness)
+        pygame.draw.line(win, BLACK, (50, 50 + 50 * i),
+                         (500, 50 + 50 * i), thickness)
+
+# Draws the values for each cell
+
+
 def draw_cells(win, cells):
     for i in range(9):
-            for j in range(9):
-                cells[i][j].draw(win)
-    
-# Updates the content of the window to be displayed             
+        for j in range(9):
+            cells[i][j].draw(win)
+
+# Updates the content of the window to be displayed
+
+
 def redraw_window(win, grid, time, text):
     win.fill(WHITE)
     # Draw time
@@ -153,26 +169,30 @@ def redraw_window(win, grid, time, text):
     grid.draw(win)
 
 # Returns the time in hours:minutes:seconds format
+
+
 def format_time(time_in_secs):
-    seconds = time_in_secs%60
-    minutes = time_in_secs//60
-    hours = minutes//60
+    seconds = time_in_secs % 60
+    minutes = time_in_secs // 60
+    hours = minutes // 60
     time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
     return time
 
 # Runs the game
+
+
 def main():
     pygame.init()
     pygame.font.init()
     font = pygame.font.SysFont("comicsans", 35)
     win = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Sudoku")    
+    pygame.display.set_caption("Sudoku")
     grid = Grid(generate_sudoku(NUMBER_OF_CLUES))
     key = None
     run = True
     text = ""
     start = time.time()
-    
+
     while run:
         play_time = round(time.time() - start)
         for event in pygame.event.get():
@@ -204,10 +224,12 @@ def main():
                     i, j = grid.selected
                     if grid.cells[i][j].temp != 0:
                         if grid.put(grid.cells[i][j].temp):
-                            text = "Your guess for cell (%d,%d) was correct!" % (i, j)
+                            text = "Your guess for cell (%d,%d) was correct!" % (
+                                i, j)
                         else:
                             if grid.cells[i][j].value == 0:
-                                text = "Your guess for cell (%d,%d) was wrong." % (i, j)
+                                text = "Your guess for cell (%d,%d) was wrong." % (
+                                    i, j)
                         key = None
 
                         if grid.is_finished():
@@ -220,11 +242,12 @@ def main():
                     grid.select(clicked[0], clicked[1])
                     key = None
 
-        if grid.selected and key != None:
+        if grid.selected and key is not None:
             grid.note(key)
 
         redraw_window(win, grid, play_time, text)
         pygame.display.update()
+
 
 if __name__ == '__main__':
     main()
