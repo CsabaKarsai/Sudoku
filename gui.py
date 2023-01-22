@@ -1,11 +1,16 @@
 import pygame
 import time
-from solver import solve, check
+from solver import *
 
-# Used to generate board, possibly replaced with own sudoku generator later
-from sudoku import Sudoku
+WIDTH = 550
+HEIGHT = 600
+WHITE = [255, 255, 255]
+BLACK = [0, 0, 0]
+RED = [255, 0, 0]
+BACKGROUND_COLOR = WHITE
+NUMBER_OF_CLUES = 30
 
-# One cell of the 9x9 sudoku board
+# One cell of the sudoku board
 class Cell:
     def __init__(self, value, row, col):
         self.value = value
@@ -29,7 +34,7 @@ class Cell:
             temp = fnt.render(str(self.value), True, (0, 0, 0))
             win.blit(temp, (x + (25 - temp.get_width()/2), y + (25 - temp.get_height()/2)))
         if self.selected:
-            pygame.draw.rect(win, red, (x,y, 50 ,50), 3)
+            pygame.draw.rect(win, RED, (x,y, 50 ,50), 3)
     
     # Sets the value of a cell
     def set_value(self, val):
@@ -117,19 +122,6 @@ class Grid:
                 if self.cells[i][j].value == 0:
                     return False
         return True
-    
-WIDTH = 550
-HEIGHT = 600
-
-white = [255, 255, 255]
-black = [0, 0, 0]
-red = [255, 0, 0]
-
-background_color = white
-# percentage of empty cells to be used for board generation
-# 0.4 means 40% of cells will be empty
-# the higher the value the more difficult the game
-portion_empty_cells = 0.7
 
 # Draws the horizontal and vertical lines of the sudoku board
 def draw_grid_lines(win):
@@ -137,50 +129,25 @@ def draw_grid_lines(win):
         thickness = 1
         if(i % 3 == 0):
             thickness = 3
-        pygame.draw.line(win, black, (50 + 50 * i, 50), (50 + 50 * i, 500), thickness)
-        pygame.draw.line(win, black, (50, 50 + 50 * i), (500, 50 + 50 * i), thickness)
+        pygame.draw.line(win, BLACK, (50 + 50 * i, 50), (50 + 50 * i, 500), thickness)
+        pygame.draw.line(win, BLACK, (50, 50 + 50 * i), (500, 50 + 50 * i), thickness)
  
 # Draws the values for each cell        
 def draw_cells(win, cells):
     for i in range(9):
             for j in range(9):
                 cells[i][j].draw(win)
-
-# Uses the py-sudoku library to create a sudoku
-def get_grid_from_py_sudoku(portion_empty_cells):
-    
-    # Create a 3 x 3 sudoku board as a list of lists
-    # portion of empty cells decides how many cells will be empty 
-    # example return value:
-    # [
-        # [0, 0, 0, 0, 2, 0, 1, 9, 0],
-        # [9, 0, 2, 0, 1, 0, 6, 8, 7],
-        # [0, 3, 8, 0, 0, 9, 4, 0, 5],
-        # [4, 0, 0, 0, 9, 0, 7, 3, 6],
-        # [6, 2, 0, 1, 0, 4, 0, 5, 0],
-        # [0, 9, 0, 0, 6, 0, 2, 1, 4],
-        # [0, 8, 0, 9, 4, 6, 5, 0, 2],
-        # [2, 5, 4, 7, 8, 1, 3, 6, 9],
-        # [7, 0, 9, 0, 0, 3, 8, 4, 0]
-    # ]
-    grid = Sudoku(3, 3).difficulty(portion_empty_cells).board
-    # Replace None values with zeros
-    for i in range(9):
-        for j in range(9):
-            if grid[i][j] == None:
-                grid[i][j] = 0
-    return grid
     
 # Updates the content of the window to be displayed             
 def redraw_window(win, grid, time, text):
-    win.fill(white)
+    win.fill(WHITE)
     # Draw time
     fnt = pygame.font.SysFont("comicsans", 30)
-    time_to_show = fnt.render("Time: " + format_time(time), True, black)
+    time_to_show = fnt.render("Time: " + format_time(time), True, BLACK)
     win.blit(time_to_show, (WIDTH - 500, HEIGHT - 80))
     # Draw text if user presses return key
     fnt = pygame.font.SysFont("comicsans", 30)
-    text_to_show = fnt.render(text, True, black)
+    text_to_show = fnt.render(text, True, BLACK)
     win.blit(text_to_show, (WIDTH - 500, HEIGHT - 45))
     # Draw grid
     grid.draw(win)
@@ -198,10 +165,9 @@ def main():
     pygame.init()
     pygame.font.init()
     font = pygame.font.SysFont("comicsans", 35)
-    
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")    
-    grid = Grid(get_grid_from_py_sudoku(portion_empty_cells))
+    grid = Grid(generate_sudoku(NUMBER_OF_CLUES))
     key = None
     run = True
     text = ""
