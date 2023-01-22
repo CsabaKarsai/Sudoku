@@ -10,11 +10,19 @@ RED = [255, 0, 0]
 BACKGROUND_COLOR = WHITE
 NUMBER_OF_CLUES = 30
 
-# One cell of the sudoku board
-
 
 class Cell:
+    """One cell of the 9x9 Sudoku grid
+    """
+
     def __init__(self, value, row, col):
+        """Constructor for the cell class
+
+        Args:
+            value (int): Value (number) inside the cell
+            row (int): Row number of the cell
+            col (int): Column number of the cell
+        """
         self.value = value
         self.temp = 0
         self.row = row
@@ -24,6 +32,11 @@ class Cell:
         self.selected = False
 
     def draw(self, win):
+        """Draws a single cell
+
+        Args:
+            win (pygame window): Window to draw the cell on
+        """
         fnt = pygame.font.SysFont("comicsans", 35)
         fnt_small = pygame.font.SysFont("comicsans", 30)
         x, y = (50 + self.col * 50, 50 + self.row * 50)
@@ -39,32 +52,54 @@ class Cell:
         if self.selected:
             pygame.draw.rect(win, RED, (x, y, 50, 50), 3)
 
-    # Sets the value of a cell
     def set_value(self, val):
+        """Sets the value of the cell
+
+        Args:
+            val (int): Value (number inside) of a cell
+        """
         self.value = val
 
-    # Sets the temporal value of a cell
     def set_temp(self, val):
-        self.temp = val
+        """Sets a temporary value for a cell (little grey number in upper corner)
 
-# Grid consisting of 9x9 cells
+        Args:
+            val (int): Temporary value of the cell
+        """
+        self.temp = val
 
 
 class Grid:
+    """Grid for the 9x9 Sudoku board the game will be played on
+    """
+
     def __init__(self, grid):
+        """Constructor for the grid class
+
+        Args:
+            grid (list of lists): Sudoku grid
+        """
         self.grid = grid
         self.cells = [[Cell(self.grid[i][j], i, j)
                        for j in range(9)] for i in range(9)]
         self.modified = None
         self.selected = None
 
-    # Updates the model which will be sent to solver to solve
     def update_modified(self):
+        """Updates the model which will be sent to solver to solve
+        """
         self.modified = [
             [self.cells[i][j].value for j in range(9)] for i in range(9)]
 
-    # Checks if putting a value in the selected cell is possible
     def put(self, val):
+        """Checks if putting a value in the selected cell is possible
+
+        Args:
+            val (int): Value to be checked for the cell
+
+        Returns:
+            boolean: True, if a solution for the board with the new value exists
+        """
         row, col = self.selected
         # Check for valid value already present in cell
         if self.cells[row][col].value == 0:
@@ -86,20 +121,33 @@ class Grid:
                 self.update_modified()
                 return False
 
-    # Notes a number in the upper left corner of a cell
     def note(self, val):
+        """Notes a number in the upper left corner of a cell
+
+        Args:
+            val (int): Value to be set as a temporary value
+        """
         row, col = self.selected
         self.cells[row][col].set_temp(val)
 
-    # Draws the whole grid
     def draw(self, win):
+        """Draws the Sudoku grid
+
+        Args:
+            win (pygame windows): Window to draw the grid on
+        """
         # Draw grid lines
         draw_grid_lines(win)
         # Draw cells
         draw_cells(win, self.cells)
 
-    # Selects a cell at a given row and column
     def select(self, row, col):
+        """Selects a cell at a given row and column
+
+        Args:
+            row (int): Row number of the cell to be selected
+            col (_type_): Column number of the cell to be selected
+        """
         # Reset all other
         for i in range(9):
             for j in range(9):
@@ -108,14 +156,22 @@ class Grid:
         self.cells[row][col].selected = True
         self.selected = (row, col)
 
-    # Clears the selected cell of a noted value
     def clear(self):
+        """Clears the selected cell of a noted value
+        """
         row, col = self.selected
         if self.cells[row][col].value == 0:
             self.cells[row][col].set_temp(0)
 
-    # Converts the mouse coordinates to grid coordinates
     def click(self, pos):
+        """Converts the mouse coordinates to grid coordinates
+
+        Args:
+            pos (mouse position): Mouse position
+
+        Returns:
+            tuple of int | None: Tuple of grid coordinates or None if outside the game
+        """
         if (51 < pos[0] < 500) and (50 < pos[1] < 500):
             x = (pos[0] // 50) - 1
             y = (pos[1] // 50) - 1
@@ -123,18 +179,25 @@ class Grid:
         else:
             return None
 
-    # Checks if the Sudoku is completed
     def is_finished(self):
+        """Checks if the Sudoku is completed
+
+        Returns:
+            boolean: True, if the game is completed
+        """
         for i in range(9):
             for j in range(9):
                 if self.cells[i][j].value == 0:
                     return False
         return True
 
-# Draws the horizontal and vertical lines of the sudoku board
-
 
 def draw_grid_lines(win):
+    """Draws the grid lines for the Sudoku board
+
+    Args:
+        win (pygame window): Window the lines a drawn on
+    """
     for i in range(10):
         thickness = 1
         if (i % 3 == 0):
@@ -144,18 +207,28 @@ def draw_grid_lines(win):
         pygame.draw.line(win, BLACK, (50, 50 + 50 * i),
                          (500, 50 + 50 * i), thickness)
 
-# Draws the values for each cell
-
 
 def draw_cells(win, cells):
+    """Draws the values for each cell
+
+    Args:
+        win (pygame window): Windows the cells are drawn on
+        cells (Cell): Cell that will be drawn
+    """
     for i in range(9):
         for j in range(9):
             cells[i][j].draw(win)
 
-# Updates the content of the window to be displayed
-
 
 def redraw_window(win, grid, time, text):
+    """Updates the content of the window to be displayed
+
+    Args:
+        win (pygame window): Window to be displayed
+        grid (Grid): Sudoku grid
+        time (python time): Elapsed play time
+        text (String): Text to be shown in the window
+    """
     win.fill(WHITE)
     # Draw time
     fnt = pygame.font.SysFont("comicsans", 30)
@@ -168,20 +241,26 @@ def redraw_window(win, grid, time, text):
     # Draw grid
     grid.draw(win)
 
-# Returns the time in hours:minutes:seconds format
-
 
 def format_time(time_in_secs):
+    """Returns the time in hours:minutes:seconds format
+
+    Args:
+        time_in_secs (int): Time in seconds
+
+    Returns:
+        python time: Time in hours:minutes:seconds format
+    """
     seconds = time_in_secs % 60
     minutes = time_in_secs // 60
     hours = minutes // 60
     time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
     return time
 
-# Runs the game
-
 
 def main():
+    """Runs the game
+    """
     pygame.init()
     pygame.font.init()
     font = pygame.font.SysFont("comicsans", 35)
