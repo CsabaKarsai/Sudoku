@@ -20,20 +20,19 @@ https://user-images.githubusercontent.com/64684648/132067181-85a75c8d-f793-491b-
 ## Requirements
 
 - Python version 3.9.6 or later installed
-- Pygame version 2.0.1 or later installed
-- py-sudoku version 1.0.3 or later installed
 
+### Installed Python Packages
+- pygame
+- time
 ## Usage
 
 1. Close this repository (only needed once initially).
-2. Run the gui.py file.
-3. Select a cell with your mouse.
-4. Pencil in your guess by pressing a number key.
-5. Delete your guess by hitting Backspace.
-6. Enter your guess by hitting Enter/Return.
-## Technologies
-
-- Pygame
+2. Optional: Edit game difficulty by changing NUMBER_OF_CLUES in gui.py file)
+3. Run the gui.py file.
+4. Select a cell with your mouse.
+5. Pencil in your guess by pressing a number key.
+6. Delete your guess by hitting Backspace.
+7. Enter your guess by hitting Enter/Return.
 ## Project Status
 
 This project is complete and will not be developed any further.
