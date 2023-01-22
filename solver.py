@@ -24,7 +24,7 @@ def check(grid, x, y, candidate):
     """Checks whether the candidate number could be put at coordinates (x,y)
 
     Args:
-        grid (list of lists): The Sudku grid/board to be checked against
+        grid (list of lists): The Sudoku grid/board to be checked against
         x (int): Row number
         y (int): Column number
         candidate (int): Candidate number to be checked
